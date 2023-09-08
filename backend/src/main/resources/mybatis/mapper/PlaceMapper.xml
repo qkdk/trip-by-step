@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.enjoytrip.place.repository.PlaceRepository">
+	<resultMap id="placeMap" type="placeDto">
+		<result column="user_id" property="userId" />
+		<result column="place_no" property="placeNo" />
+		<result column="place_title" property="placeTitle" />
+		<result column="place_content" property="placeContent" />
+		<result column="hit" property="hit" />
+		<result column="place_createtime" property="placeCreateTime" />
+		<result column="place_img_src" property="placeImgSrc" />
+		<result column="recommend_count" property="recommend" />
+	</resultMap>
+
+	<resultMap id="replyMap" type="replyDto">
+		<result column="reply_id" property="replyId" />
+		<result column="reply_content" property="replyContent" />
+		<result column="reply_createtime" property="replyCreateTime" />
+		<result column="reply_user_id" property="userId" />
+		<result column="place_no" property="placeNo" />
+		<result column="parent_id" property="parentId" />
+	</resultMap>
+	
+	<resultMap id="recommendMap" type="recommendDto">
+		<result column="user_id" property="user_id"/>
+		<result column="place_no" property="place_no"/>
+	</resultMap>
+	
+	<select id="recommend" resultMap="recommendMap">
+		SELECT * FROM place_recommend
+		WHERE place_no = #{no};
+	</select>
+	
+	<insert id="addRecommend">
+		INSERT INTO place_recommend (user_id, place_no)
+		VALUES (#{user_id}, #{place_no});
+	</insert>
+	
+	<delete id="delRecommend">
+		DELETE FROM place_recommend
+		WHERE place_no = #{place_no}
+		AND user_id = #{user_id}
+	</delete>
+	
+	
+	<select id="replyList" resultMap="replyMap">
+		SELECT * FROM place_reply
+		WHERE place_no = #{placeNo}
+	</select>
+	
+	<select id="getList" resultMap="placeMap">
+		SELECT * FROM place
+	</select>
+	
+	<select id=""></select>
+	
+	
+	<select id="getTotalPlaceCount" resultType="int">
+  		SELECT count(*) FROM place
+  		<if test='key != ""'>
+  	  WHERE ${key} LIKE concat('%', #{word}, '%')
+  		</if>
+  	</select>
+	
+	<select id="getPlace" resultMap="placeMap">
+  		SELECT * FROM place
+  			<if test='key != ""'>
+      			<if test='word != ""'>
+      				WHERE ${key} LIKE concat('%', #{word}, '%')
+      			</if>
+      		</if>
+  		LIMIT #{offset} , #{limit}
+	</select>
+	
+	<select id="getPlaceSort" resultMap="placeMap">
+  		SELECT * FROM place
+  			<if test='key != ""'>
+      			<if test='word != ""'>
+      				WHERE ${key} LIKE concat('%', #{word}, '%')
+      			</if>
+      		</if>
+      	ORDER BY recommend_count DESC
+  		LIMIT #{offset} , #{limit}
+	</select>
+
+    
+    <select id="getPlaceByPlaceNo" resultMap="placeMap">
+      SELECT *
+      FROM place p, place_img i
+      WHERE 1
+      AND i.place_no = #{placeNo}
+      AND p.place_no = #{placeNo}
+    </select>
+    
+    <select id="view" resultMap="placeMap">
+      SELECT *
+      FROM place
+      WHERE place_no = #{placeNo}
+    </select>
+    
+    <insert id="writePlace">
+    	INSERT INTO place (user_id, place_title, place_content, city)
+    	VALUES (#{userId}, #{placeTitle}, #{placeContent}, "")
+    </insert>
+    
+    <insert id="writePlaceImg">
+    	INSERT into place_img (place_no, place_img_src)
+    	VALUES (#{placeNo}, #{placeImgSrc})
+    </insert>
+    
+    <insert id="writeReply">
+    	INSERT INTO place_reply (reply_content, reply_user_id, place_no, parent_id)
+    	VALUES (#{replyContent}, #{userId}, #{placeNo}, #{parentId})
+    </insert>
+    
+    <select id="lastIndex" resultType="int">
+    	SELECT max(place_no) FROM place
+    </select>
+    
+    <select id="checkImg" resultType="int">
+    	SELECT count(*) FROM place_img WHERE place_no = #{placeNo}
+    </select>
+    
+    <delete id="deletePlace">
+    	DELETE FROM place
+    	WHERE place_no = #{placeNo}
+    </delete>
+    
+    <delete id="deletePlaceImg">
+    	DELETE FROM place_img
+    	WHERE place_no = #{placeNo}
+    </delete>
+    
+    <update id="modifyPlace">
+    	UPDATE place
+    	SET place_title = #{placeTitle}, place_content = #{placeContent}
+    	WHERE place_no = #{placeNo}
+    </update>
+    
+    <update id="modifyRecommend">
+    	UPDATE place
+    	SET recommend_count = #{count}
+    	WHERE place_no = #{placeNo}
+    </update>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+    <typeAlias type="com.ssafy.enjoytrip.user.dto.UserDto" alias="userDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.user.dto.JoinDto" alias="joinDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.user.dto.FollowDto" alias="followDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.notice.dto.NoticeDto" alias="noticeDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.Attraction.dto.AttractionDto" alias="attractionDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.Attraction.dto.SidoCodeDto" alias="sidoCodeDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.Attraction.dto.GugunCodeDto" alias="gugunCodeDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.place.dto.PlaceDto" alias="placeDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.place.dto.ReplyDto" alias="replyDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.place.dto.RecommendDto" alias="recommendDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.plan.dto.PlanWriteRequestDto" alias="planWriteRequestDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.plan.dto.PlanDto" alias="planDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.plan.dto.PlanDetailDto" alias="planDetailDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.trail.dto.TrailInputDto" alias="trailInputDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.trail.dto.TrailBoardDto" alias="trailBoardDto"/>
+    <typeAlias type="com.ssafy.enjoytrip.trail.dto.CityDto" alias="cityDto"/> 
+    <typeAlias type="com.ssafy.enjoytrip.trail.dto.TrailBoardReplyDto" alias="trailBoardReplyDto"/> 
+  </typeAliases>
+
+  <mappers>
+    <mapper resource="mybatis/mapper/userMapper.xml"/>
+    <mapper resource="mybatis/mapper/noticeMapper.xml"/>
+    <mapper resource="mybatis/mapper/AttractionMapper.xml"/>
+    <mapper resource="mybatis/mapper/PlaceMapper.xml"/>
+    <mapper resource="mybatis/mapper/planMapper.xml"/>
+    <mapper resource="mybatis/mapper/trailMapper.xml"/>
+  </mappers>
+</configuration>

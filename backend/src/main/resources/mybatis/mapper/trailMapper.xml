@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.trail.repository.TrailRepository">
+	<resultMap id="trailMap" type="trailInputDto" >
+		<result column="title" property="title"></result>
+		<result column="description" property="description"></result>
+		<result column="total_length" property="total_length"></result>
+		<result column="estimated_time" property="estimated_time"></result>
+		<result column="start_name" property="start_name"></result>
+		<result column="start_sido_code" property="start_sido_code"></result>
+		<result column="start_gugun_code" property="start_gugun_code"></result>
+		<result column="start_detail_addr" property="start_detail_addr"></result>
+		<result column="end_name" property="end_name"></result>
+		<result column="end_sido_code" property="end_sido_code"></result>
+		<result column="end_gugun_code" property="end_gugun_code"></result>
+		<result column="end_detail_addr" property="end_detail_addr"></result>
+		<result column="route" property="route"></result>
+		<result column="tel" property="tel"></result>
+		<result column="manage_name" property="manage_name"></result>
+		<result column="add_date" property="add_date"></result>
+		<result column="provide_code" property="provide_code"></result>
+		<result column="provide_name" property="provide_name"></result>
+	</resultMap>
+	
+	<resultMap id="cityMap" type="cityDto">
+		<result column="start_sido_name" property="startSidoName"/>
+		<result column="start_gugun_name" property="startGugunName"/>
+		<result column="end_sido_name" property="endSidoName"/>
+		<result column="end_gugun_name" property="endGugunName"/>
+	</resultMap>
+	
+	<resultMap id="sidoCodeMap" type="sidoCodeDto">
+    	<result column="sido_code" property="sidoCode"></result>
+    	<result column="sido_name" property="sidoName"></result>
+  	</resultMap>
+
+  	<resultMap id="gugunCodeMap" type="gugunCodeDto">
+    	<result column="gugun_code" property="gugunCode"></result>
+    	<result column="sido_code" property="sidoCode"></result>
+    	<result column="gugun_name" property="gugunName"></result>
+  	</resultMap>
+  	
+  	<resultMap id="trailBoardMap" type="trailBoardDto" >
+  		<result column="trail_board_no" property="trail_board_no"></result>
+  		<result column="trail_board_trail_id" property="trail_board_trail_id"></result>
+  		<result column="user_id" property="user_id"></result>
+  		<result column="trail_board_title" property="trail_board_title"></result>
+  		<result column="trail_board_content" property="trail_board_content"></result>
+  		<result column="trail_board_start_time" property="trail_board_start_time"></result>
+  		<result column="trail_board_end_time" property="trail_board_end_time"></result>
+  		<result column="trail_board_create_time" property="trail_board_create_time"></result>
+  		<result column="trail_party_member_id" property="trail_party_member_id"></result>
+  		<result column="trail_board_max_member" property="trail_board_max_member"></result>
+  		<result column="trail_board_member_count" property="trail_board_member_count"></result>		
+  	</resultMap>
+  	
+  	<resultMap id="trailBoardReplyMap" type="trailBoardReplyDto" >
+  		<result column="trail_reply_no" property="replyNo"/>
+  		<result column="trail_reply_board_no" property="boardNo"/>
+  		<result column="trail_reply_user_id" property="replyUserId"/>
+  		<result column="trail_reply_content" property="replyContent"/>
+  		<result column="trail_reply_createtime" property="replyCreateTime"/>
+  	</resultMap>
+  	
+  	<select id="getReply" resultMap="trailBoardReplyMap">
+  		SELECT *
+  		FROM trail_board_reply
+  		WHERE trail_reply_board_no = #{no}
+  	</select>
+  	
+  	<insert id="setReply">
+  		INSERT INTO trail_board_reply (trail_reply_board_no, trail_reply_user_id, trail_reply_content)
+  		VALUES (#{boardNo} , #{replyUserId}, #{replyContent})
+  	</insert>
+  	
+  	
+  	<select id="getCityName" resultMap="cityMap">
+		SELECT s.sido_name AS start_sido_name, g.gugun_name AS start_gugun_name,
+       		s2.sido_name AS end_sido_name, g2.gugun_name AS end_gugun_name
+		FROM trail t
+		JOIN sido s ON s.sido_code = t.start_sido_code
+		JOIN gugun g ON g.sido_code = t.start_sido_code AND g.gugun_code = t.start_gugun_code
+		JOIN sido s2 ON s2.sido_code = t.end_sido_code
+		JOIN gugun g2 ON g2.sido_code = t.end_sido_code AND g2.gugun_code = t.end_gugun_code
+		WHERE t.trail_id = #{trailId}
+  	</select>
+  	
+  	
+  	
+  	<select id="getSido" resultMap="sidoCodeMap">
+  		SELECT *
+  		FROM sido
+  		ORDER BY sido_code
+  	</select>
+  	
+  	<select id="getGugun" resultMap="gugunCodeMap">
+  		SELECT *
+  		FROM gugun
+  		WHERE sido_code = #{sido}
+  		ORDER BY gugun_code
+  	</select>
+  	
+  	<insert id="writeTrailBoard" parameterType="trailBoardDto">
+  		INSERT INTO trail_board (trail_board_trail_id, user_id, trail_board_title, trail_board_content, 
+  								trail_board_start_time, trail_board_end_time)
+  		VALUES (#{trail_board_trail_id}, #{user_id}, #{trail_board_title}, #{trail_board_content}, 
+  								#{trail_board_start_time}, #{trail_board_end_time})							
+  	</insert>
+  	
+  	<update id="trailBoardUpdate">
+  		UPDATE trail_board
+  		SET trail_board_title = #{trail_board_title}, trail_board_content = #{trail_board_content},
+  			trail_board_start_time = #{trail_board_start_time}, trail_board_end_time = #{trail_board_end_time}
+  		WHERE trail_board_no = #{trail_board_no}
+  	</update>
+  	
+  	<select id="lastIndex" resultType="int">
+    	SELECT max(trail_board_no) FROM trail_board
+    </select>
+ 
+  	<insert id="writeTrailParty">
+  		INSERT INTO trail_party (trail_party_id, trail_party_member_id, trail_board_max_member, trail_board_member_count)
+  		VALUES (#{trail_party_id}, #{trail_party_member_id}, #{trail_board_max_member}, #{trail_board_member_count})
+  	</insert>
+  	
+  	<insert id="joinParty">
+  		INSERT INTO trail_party (trail_party_id, trail_party_member_id, trail_board_max_member, trail_board_member_count)
+  		VALUES (#{trail_board_no}, #{user_id},
+  		(SELECT MAX(trail_board_max_member) FROM trail_party tp WHERE tp.trail_party_id = #{trail_board_no}),
+  		(SELECT MAX(trail_board_member_count) FROM trail_party tp WHERE tp.trail_party_id = #{trail_board_no})+1)
+  	</insert>
+  	
+  	<select id="getTrail" resultMap="trailMap" >
+  		SELECT *
+  		FROM trail
+  		WHERE start_sido_code = #{sido}
+  		AND start_gugun_code = #{gugun}
+  	</select>
+  	
+  	
+  	<select id="view" resultMap="trailMap">
+  		SELECT *
+  		FROM trail 
+  		WHERE trail_id = #{trail_id}
+  	</select>
+  	
+  	<select id="trailBoardList" resultMap="trailBoardMap">
+  		SELECT *
+  		FROM trail_board tb
+  		INNER JOIN trail_party tp ON tb.trail_board_no = tp.trail_party_id
+  		WHERE 1
+  		AND tp.trail_board_member_count = (
+    		SELECT MAX(tp2.trail_board_member_count)
+    		FROM trail_party tp2
+    		WHERE tp2.trail_party_id = tb.trail_board_no
+		)
+  		<if test='key != "" and key != null'>
+      		<if test='word != "" and word != null'>
+       			 AND ${key} LIKE concat('%', #{word}, '%')
+      		</if>
+    	</if>
+  	</select>
+  	
+  	<select id="joinMember" resultMap="trailBoardMap">
+  		SELECT tp.trail_party_member_id
+  		FROM trail_board tb, trail_party tp
+  		WHERE tb.trail_board_no = #{no}
+  		AND tp.trail_party_id = #{no}
+  	</select>
+  	
+  	<select id="getLatestBoard" resultMap="trailBoardMap">
+  		SELECT *
+  		FROM trail_board tb, trail_party tp
+  		WHERE tb.trail_board_no = #{trail_board_no}
+  		AND tp.trail_party_id = #{trail_board_no}
+  	</select>
+  	
+  	<delete id="deleteTrailParty">
+  		DELETE FROM trail_party
+		WHERE trail_party_id = #{no}
+  	</delete>
+  	
+  	<delete id="deleteTrailBoard">
+  		DELETE FROM trail_board
+		WHERE trail_board_no = #{no}
+  	</delete>
+
+
+  <insert id="insertData" parameterType="list">
+    INSERT INTO trail(title, description, total_length, estimated_time, start_name, start_sido_code,
+    start_gugun_code, start_detail_addr, end_name, end_sido_code, end_gugun_code,
+    end_detail_addr, route, tel, manage_name, add_date, provide_code,
+    provide_name)
+    VALUES
+    <foreach collection="list" item="dto" separator=",">
+      (#{dto.title},#{dto.description},#{dto.total_length},#{dto.estimated_time},#{dto.start_name},#{dto.start_sido_code},
+       #{dto.start_gugun_code},#{dto.start_detail_addr},#{dto.end_name},#{dto.end_sido_code},#{dto.end_gugun_code},
+       #{dto.end_detail_addr},#{dto.route},#{dto.tel},#{dto.manage_name},#{dto.add_date},#{dto.provide_code}, #{dto.provide_name})
+    </foreach>
+  </insert>
+
+</mapper>
