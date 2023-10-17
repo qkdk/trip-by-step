@@ -17,7 +17,7 @@
 
 # 멤버
 
-### [안규보](https://github.com/qkdk) <br><br> [이승종](https://github.com/SeungJong-Lee)
+### [안규보](https://github.com/qkdk) <br><br> [이승종](https://github.com/bbong-gu)
 
 <br>
 <br>
