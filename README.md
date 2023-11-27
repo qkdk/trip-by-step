@@ -106,4 +106,4 @@
 
 #
 
-### [프론트 깃허브](https://github.com/SeungJong-Lee/enjoy-trip-vue) <br><br> [백엔드 깃허브](https://github.com/SeungJong-Lee/enjoy-trip)
+### [프론트 깃허브](https://github.com/qkdk/enjoy-trip-vue) <br><br> [백엔드 깃허브](https://github.com/qkdk/enjoy-trip)
